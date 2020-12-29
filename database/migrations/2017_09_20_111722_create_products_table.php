@@ -19,7 +19,8 @@ class CreateProductsTable extends Migration
             $table->integer('price')->unsigned()->default(0);
             $table->integer('vendor_id')->unsigned();
             $table->timestamps();
-            $table->foreign('vendor_id')->references('id')->on('vendors');            
+            $table->foreign('vendor_id')->references('id')->on('vendors');
+            $table->softDeletes();
         });
     }
 

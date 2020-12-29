@@ -11,6 +11,6 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use App\Http\Controllers\DefaultController;
+
+Route::get('/', [DefaultController::class, "index"]);

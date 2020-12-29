@@ -21,6 +21,7 @@ class CreateOrdersTable extends Migration
             $table->timestamp('delivery_dt');
             $table->timestamps();
             $table->foreign('partner_id')->references('id')->on('partners');
+            $table->softDeletes();
         });
     }
 
