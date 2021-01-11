@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\DefaultController;
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +14,16 @@
 |
 */
 
-use App\Http\Controllers\DefaultController;
-
 Route::get('/', [DefaultController::class, "index"]);
+Route::get('/orders-list', [DefaultController::class, "orders_list"])->middleware('auth');
+
+
+Route::get('/welcome_page', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__ . '/auth.php';

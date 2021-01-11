@@ -8,13 +8,8 @@ use App\Order;
 
 class WorkWithDBService
 {
-    public static function __callStatic($name, $arguments)
+    public function get_list_of_order()
     {
-        return (new static())->$name(...$arguments);
-    }
-
-    public static function get_list_of_order()
-    {
-        return app()[Order::class]->with("order_products.product","partner")->Paginate(10);
+        return Order::with("order_products.product","partner")->paginate(10);
     }
 }

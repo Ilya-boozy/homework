@@ -16,9 +16,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Paginator::useBootstrap();
-        $this->app->singleton(Order::class,function ($app){
-            return new Order();
-        });
     }
 
     /**
