@@ -14,3 +14,8 @@
 use App\Http\Controllers\DefaultController;
 
 Route::get('/', [DefaultController::class, "index"]);
+Route::get('/orders-list', [DefaultController::class, "orders_list"])->middleware("auth");
+
+Auth::routes(['verify' => true]);
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

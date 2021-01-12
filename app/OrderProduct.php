@@ -3,11 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class OrderProduct extends Model
 {
     protected $table = 'order_products';
+
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -16,5 +16,10 @@ class OrderProduct extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function getRowsSumAttribute()
+    {
+        return $this->price * $this->quantity;
     }
 }
