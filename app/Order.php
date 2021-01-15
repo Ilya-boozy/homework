@@ -9,14 +9,21 @@ class Order extends Model
 {
     use SoftDeletes;
 
+    protected $appends = ['order_sum'];
+
     public function partner()
     {
-        return $this->hasOne(Partner::class,"id","partner_id");
+        return $this->hasOne(Partner::class, "id", "partner_id");
     }
 
-    public function order_products()
+    public function products()
     {
-        return $this->hasMany(OrderProduct::class);
+        return $this->belongsToMany(Product::class, 'order_products')->withPivot('quantity', 'price');
+    }
+
+    public function getOrderSumAttribute()
+    {
+        return $this->products->sum('order_sum');
     }
 
     //public function get_list_of_order()

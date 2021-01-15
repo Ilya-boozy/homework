@@ -5,11 +5,6 @@
 
 @section('main_content')
     <div class="container">
-        <script>
-            function show_or_hide_items_table(table_id) {
-                $('#' + table_id).toggle();
-            }
-        </script>
         <table class="table">
             <thead>
             <tr>
@@ -23,14 +18,14 @@
             <tbody>
             @foreach($orders as $order)
                 <tr>
-                    <th scope="row">{{$order->id}}</th>
+                    <th scope="row"><a href="/orders-list/{{$order->id}}/edit">{{$order->id}}</a></th>
                     <td>{{$order->partner->name}}</td>
-                    <td>{{$order->order_products->sum("RowsSum")}}</td>
-                    <td class="items_table">
+                    <td>{{$order->order_sum }}</td>
+                    <td class="products-container">
                         <p>
-                            <button class="btn btn-secondary" onclick="show_or_hide_items_table('Table{{$order->id}}')">Товары</button>
+                            <button class="btn btn-secondary visible-control-products"  id="{{$order->id}}">Товары</button>
                         </p>
-                        <table class="table table_child" id="Table{{$order->id}}">
+                        <table class="table table-child" id="table{{$order->id}}">
                             <thead>
                             <tr>
                                 <th scope="col">Product</th>
@@ -38,12 +33,12 @@
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Amount</th>
                             </tr>
-                            @foreach($order->order_products as $product_line)
+                            @foreach($order->products as $product)
                                 <tr>
-                                    <td>{{$product_line->product->name}}</td>
-                                    <td>{{$product_line->price}}</td>
-                                    <td>{{$product_line->quantity}}</td>
-                                    <td>{{$product_line->price * $product_line->quantity}}</td>
+                                    <td>{{$product->name}}</td>
+                                    <td>{{$product->pivot->price}}</td>
+                                    <td>{{$product->pivot->quantity}}</td>
+                                    <td>{{$product->order_sum}}</td>
                                 </tr>
                             @endforeach
                             </thead>
