@@ -3,71 +3,81 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Orders\UpdateProductsRequest;
+use App\Mail\SendOrderMail;
 use App\Order;
+use App\Partner;
 use App\Product;
+use App\Services\GetOrdersService;
+use App\Services\PrepareDataForSaveService;
+use App\Services\StatusService;
+use App\Services\WeatherService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DefaultController extends Controller
 {
     public function index()
     {
-        return view("index");
+        $weather = WeatherService::get_weather();
+
+        return view("index", compact("weather"));
     }
 
-    public function orders_list()
+    public function ordersList($group)
     {
-        $orders = Order::query()
-            ->where("client_email", Auth::user()->email)
-            ->with("products")
-            ->paginate(10);
 
-        return view("orders-list", compact("orders"));
+        $orders     = GetOrdersService::ordersForList($group);
+        $group_list = ["all", "overdue", "current", "new", "completed"];
+
+        return view("orders-list", compact("orders", "group_list", "group"));
     }
 
-    public function edit_order(Order $order)
+    public function editOrder(Order $order)
     {
-        return view("edit-order", compact("order"));
+        $status_list = StatusService::getStatusList();
+        $all_product = Product::all();
+        $all_partner = Partner::all();
+
+        return view("edit-order", compact("order", "status_list", "all_product", "all_partner"));
     }
 
-    public function edit_orders_row(Order $order, Request $request)
+    public function editOrdersRow(Order $order, Request $request)
     {
-
         return response()->json([
             "price" => Product::query()->find($request->product_id)->price,
         ], 200);
-
     }
 
-    public function update_order(Order $order, UpdateProductsRequest $request)
+    public function updateOrder(Order $order, UpdateProductsRequest $request)
     {
-        $order->products()->sync([]);
-        $order->products()->sync($this->prepareDataForSync($request->validated()));
-
-        return redirect(route("edit_order", ["order" => $order]), 302);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return array
-     */
-    private function prepareDataForSync(array $data): array
-    {
-        $result         = collect();
-        $quantity_array = Arr::get($data, 'quantity');
-        foreach (Arr::get($data, 'product_id') as $key => $id) {
-            $record = $result->get($id);
-            if ($record) {
-                $record['quantity'] += $quantity_array[$key];
-                $result->put($id, $record);
-            } else {
-                $price = Product::query()->findOrFail($id)->price;
-                $result->put($id, ['quantity' => $quantity_array[$key], 'price' => $price]);
-            }
+        if ($order->client_email != Auth::user()->email) {
+            return redirect(route("index"));
         }
+        $old_status = $this->updateDBOrder($request, $order);
+        if ($order->status == 20 && $old_status != 20) {
+            $this->sendEmail($order);
+        }
+        return redirect()->route("edit_order", ["order" => $order])->with('status', 'ok');
+    }
 
-        return $result->toArray();
+    private function updateDBOrder($request, $order)
+    {
+        $data_for_update          = $request->validated();
+        $products_data_for_update = PrepareDataForSaveService::orderProductDataForSync($data_for_update);
+        $old_status               = $order->partner_id;
+        DB::transaction(function () use ($order, $data_for_update, $products_data_for_update) {
+            $order->products()->sync($products_data_for_update);
+            $order->partner_id = $data_for_update["partner"];
+            $order->status     = $data_for_update["status"];
+            $order->save();
+        });
+        return $old_status;
+    }
+
+    private function sendEmail($order)
+    {
+        Mail::to('taylor@example.com')->send(new SendOrderMail($order));
     }
 }

@@ -11,10 +11,6 @@ class Product extends Model
 
     protected $appends = ['order_sum'];
 
-    //public function order_products(){
-    //    return $this->hasMany(OrderProduct::class);
-    //}
-
     public function orders()
     {
         return $this->belongsToMany(Order::class, 'order_products');

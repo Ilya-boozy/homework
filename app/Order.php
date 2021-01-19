@@ -25,9 +25,4 @@ class Order extends Model
     {
         return $this->products->sum('order_sum');
     }
-
-    //public function get_list_of_order()
-    //{
-    //    return $this->with("order_products.product","partner")->where('orders.id',2)->get();
-    //}
 }

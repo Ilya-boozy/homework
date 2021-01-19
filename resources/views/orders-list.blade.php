@@ -5,6 +5,22 @@
 
 @section('main_content')
     <div class="container">
+        <p>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            @foreach($group_list as $group_)
+                <a
+                    @if ($group_ == $group)
+                    class="btn btn-primary"
+                    @else
+                    class="btn btn-secondary"
+                    @endif btn-danger
+                    href="{{route('orders_list',['group'=>$group_])}}"
+                >
+                    {{$group_}}
+                </a>
+            @endforeach
+        </div>
+        </p>
         <table class="table">
             <thead>
             <tr>
@@ -23,7 +39,7 @@
                     <td>{{$order->order_sum }}</td>
                     <td class="products-container">
                         <p>
-                            <button class="btn btn-secondary visible-control-products"  id="{{$order->id}}">Товары</button>
+                            <button class="btn btn-secondary visible-control-products" id="{{$order->id}}">Goods</button>
                         </p>
                         <table class="table table-child" id="table{{$order->id}}">
                             <thead>
@@ -33,6 +49,8 @@
                                 <th scope="col">Quantity</th>
                                 <th scope="col">Amount</th>
                             </tr>
+                            </thead>
+                            <tbody>
                             @foreach($order->products as $product)
                                 <tr>
                                     <td>{{$product->name}}</td>
@@ -41,16 +59,17 @@
                                     <td>{{$product->order_sum}}</td>
                                 </tr>
                             @endforeach
-                            </thead>
-                            <tbody>
                             </tbody>
                         </table>
                     </td>
                     <td>{{$order->status}}</td>
+                    <td order_type="{{$order->order_complex_status}}"></td>
                 </tr>
             @endforeach
             </tbody>
         </table>
+        @if (!($group=="current"))
+            {{$orders->links()}}
+        @endif
     </div>
-    {{$orders->links()}}
 @endsection

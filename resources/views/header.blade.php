@@ -1,3 +1,4 @@
+<script src="{{ mix('js/app.js') }}"></script>
 <header class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -7,7 +8,7 @@
 
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ url('/orders-list') }}" class="nav-link">Orders list</a>
+                            <a href="{{ route("orders_list",["group"=>"all"]) }}" class="nav-link">Orders list</a>
                         @endauth
                         <div class="btn-group" role="group" aria-label="Basic example">
                             @auth
@@ -24,9 +25,11 @@
                                 @endif
                             @endauth
                         </div>
+
                     @endif
                 </div>
             </div>
+            <a class="navbar-brand" href="/">Home</a>
         </div>
     </nav>
 </header>
