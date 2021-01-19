@@ -59,6 +59,7 @@ class DefaultController extends Controller
         if ($order->status == 20 && $old_status != 20) {
             $this->sendEmail($order);
         }
+
         return redirect()->route("edit_order", ["order" => $order])->with('status', 'ok');
     }
 
@@ -73,6 +74,7 @@ class DefaultController extends Controller
             $order->status     = $data_for_update["status"];
             $order->save();
         });
+
         return $old_status;
     }
 
