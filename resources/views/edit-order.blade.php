@@ -25,13 +25,13 @@
                                 </script>
                             @endif
                             <div class="form-group row">
-                                <label  class="col-sm-2">E-mail</label>
+                                <label class="col-sm-2">E-mail</label>
                                 <div class="col-sm-10">
                                     <label class="col-form-label">{{$order->client_email}}</label>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Partner</label>
+                                <label class="col-sm-2 col-form-label">Partner</label>
                                 <div class="col-sm-10">
                                     <select class="custom-select mr-sm-2 product_id" name="partner">
                                         @include('table-to-option-list',["current_id"=>$order->partner->id,"records"=>$all_partner])
@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Status</label>
+                                <label class="col-sm-2 col-form-label">Status</label>
                                 <div class="col-sm-10">
                                     <select class="custom-select mr-sm-2 product_id" name="status">
                                         @foreach($status_list as $status)

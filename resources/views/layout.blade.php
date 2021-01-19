@@ -10,9 +10,6 @@
 </head>
 <body>
 @yield("header")
-
 @yield("main_content")
-
-
 </body>
 </html>

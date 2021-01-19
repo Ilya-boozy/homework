@@ -34,7 +34,7 @@ $(document).ready(function () {
     $('.product_row').each(function () {
         price = $(this).find('.price').text();
         quantity = $(this).find('.product_quantity').val();
-        $(this).find('.amount').text(price*quantity);
+        $(this).find('.amount').text(price * quantity);
     });
     $('.product_id').on('change', function () {
         change_row($(this));

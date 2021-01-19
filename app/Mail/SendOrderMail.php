@@ -30,6 +30,6 @@ class SendOrderMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.mail',['order' => $this->order])->subject("Order №".$this->order->id." completed");
+        return $this->markdown('emails.mail', ['order' => $this->order])->subject("Order №" . $this->order->id . " completed");
     }
 }

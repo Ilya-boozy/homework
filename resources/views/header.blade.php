@@ -5,7 +5,6 @@
             <a class="navbar-brand" href="/">Home</a>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-
                     @if (Route::has('login'))
                         @auth
                             <a href="{{ route("orders_list",["group"=>"all"]) }}" class="nav-link">Orders list</a>
@@ -25,7 +24,6 @@
                                 @endif
                             @endauth
                         </div>
-
                     @endif
                 </div>
             </div>
