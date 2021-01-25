@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('layouts.layout')
 @section("header")
-    @include('header')
+    @include('layouts.header')
 @endsection
 
 @section('main_content')

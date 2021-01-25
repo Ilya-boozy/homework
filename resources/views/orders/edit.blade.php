@@ -1,6 +1,6 @@
-@extends('layout')
+@extends('layouts.layout')
 @section("header")
-    @include('header')
+    @include('layouts.header')
 @endsection
 
 @section('main_content')
@@ -10,9 +10,12 @@
                 <div class="card">
                     <div class="card-header">{{$order->id}}</div>
                     <div class="card-body">
-                        <form method="POST" action="{{route("save_order",["order"=>$order])}}">
+                        <form method="POST" action="{{route("orders.update",["order"=>$order])}}">
                             @csrf
-                            @if (session()->get("status"))
+                            @if (isset($order))
+                                @method('PUT')
+                            @endif
+                            @if (session()->get("order_saved"))
                                 <div class="form-group row" id="text-about-save">
                                     <div class="col-md-8 ">
                                         <p class="text-muted">Order saved</p>
@@ -33,8 +36,8 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Partner</label>
                                 <div class="col-sm-10">
-                                    <select class="custom-select mr-sm-2 product_id" name="partner">
-                                        @include('table-to-option-list',["current_id"=>$order->partner->id,"records"=>$all_partner])
+                                    <select class="custom-select mr-sm-2 product_id" name="partner_id">
+                                        @include('layouts.select-option',["current_id"=>$order->partner->id,"records"=>$all_partner])
                                     </select>
                                 </div>
                             </div>
@@ -70,13 +73,13 @@
                                                     class="custom-select mr-sm-2 product_id"
                                                     name="product_id[]"
                                                 >
-                                                    @include('table-to-option-list',["current_id"=>$product->id,"records"=>$all_product])
+                                                    @include('layouts.select-option',["current_id"=>$product->id,"records"=>$all_product])
                                                 </select>
                                             </td>
                                             <td class="price">{{$product->pivot->price}}</td>
                                             <td>
                                                 <input
-                                                    class="form-control product_quantity"
+                                                    class="form-control quantity"
                                                     name="quantity[]"
                                                     type="number"
                                                     min="1"

@@ -11,13 +11,13 @@
 |
 */
 
-use App\Http\Controllers\DefaultController;
+use App\Http\Controllers\OrdersController;
 
-Route::get('/', [DefaultController::class, "index"])->name("index");
-Route::get('/orders-list/{group}', [DefaultController::class, "ordersList"])->name("orders_list")->middleware("auth");
-Route::get('/orders-list/{order}/edit', [DefaultController::class, "editOrder"])->name("edit_order")->middleware("auth");
-Route::post('/orders-list/{order}/edit', [DefaultController::class, "editOrdersRow"])->middleware("auth");
-Route::post('/orders-list/{order}/save', [DefaultController::class, "updateOrder"])->name("save_order")->middleware("auth");
+Route::middleware('auth')->group(function () {
+    Route::resource('orders', OrdersController::class);
+    Route::get('/', [OrdersController::class, "index"])->name("index");
+});
+
 
 Auth::routes(['verify' => true]);
 

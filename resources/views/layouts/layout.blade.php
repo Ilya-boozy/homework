@@ -9,6 +9,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
+<script src="{{ mix('js/app.js') }}"></script>
 @yield("header")
 @yield("main_content")
 </body>
